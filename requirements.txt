@@ -1,0 +1,16 @@
+Babel==2.8.0
+beautifulsoup4==4.8.2
+certifi==2019.11.28
+chardet==3.0.4
+geojson==2.5.0
+idna==2.9
+lxml==4.5.0
+numpy==1.18.2
+opencv-python==4.2.0.32
+peewee==3.13.1
+pyowm==2.10.0
+pytz==2020.1
+requests==2.23.0
+soupsieve==2.0
+termcolor==1.1.0
+urllib3==1.25.8
