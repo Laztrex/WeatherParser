@@ -3,7 +3,10 @@ import json
 import logging
 import os
 
+APPID_WeatherOpenMap = ''
+
 LOG = logging.getLogger('weather')
+
 
 SCENARIOS_WEATHER = {
     "city": "воронеж",
@@ -15,7 +18,9 @@ SCENARIOS_WEATHER = {
             'en': ['Morning', 'Day', 'Evening', 'Night']
         }
     },
-    "appid_WeatherMap": "2e86a4b6e54c2f514e411e63e023968c",
+    'ru': 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
+    'en': 'abcdefghijklmnopqrstuvwxyz',
+
     "dangerous_weather": {
         "солнечно": 0.01,
         "ясно": 0.05,
@@ -91,14 +96,12 @@ SCENARIOS_WEATHER = {
     "TEXT_DATE": ((305, 20), 3, 0.4, (0, 0, 0), 1, 16),
     "TEXT_INFO": ((300, {'Хроника': 180, 'В мире': 80}), 3, 0.4, (0, 0, 0), 1, 16),
     "TEXT_CITY": ((305, 45), 3, 0.4, (0, 0, 0), 1, 16),
-    "ICON_WEATHER": {'Утро': ((5, 65), (0, 280)), "День": ((68, 128), (0, 280)),
-                     'Вечер': ((130, 190), (0, 280)), "Ночь": ((193, 253), (0, 280))},
-    "ICON_PART_DAYS": {'Утро': ((10, 60), (5, 55)), "День": ((73, 123), (5, 55)),
-                       'Вечер': ((135, 185), (5, 55)), "Ночь": ((198, 248), (5, 55))},
+    "ICON_WEATHER": {'Утро': ((5, 65), (5, 285)), "День": ((68, 128), (5, 285)),
+                     'Вечер': ((130, 190), (5, 285)), "Ночь": ((193, 253), (5, 285))},
+    "ICON_PART_DAYS": {'Утро': ((10, 60), (10, 60)), "День": ((73, 123), (10, 60)),
+                       'Вечер': ((135, 185), (10, 60)), "Ночь": ((198, 248), (10, 60))},
     "ICON_DEGREE": {'x1': 130, 'x2': 115, 'y1': 30, 'y2': 15},
 }
-
-print(os.path.normpath(os.path.dirname(__file__)))
 
 
 class WeatherDungerous:

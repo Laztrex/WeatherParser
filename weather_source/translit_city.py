@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
 import requests
+
+from weather_source.files.settings import APPID_WeatherOpenMap
 
 
 def t_crypt(city):
@@ -56,13 +57,12 @@ def t_late(city):
     :param city: введенный город
     :return: валидное название города
     """
-    appid = "2e86a4b6e54c2f514e411e63e023968c"
     try:
         res = requests.get("http://api.openweathermap.org/data/2.5/find",
-                           params={'q': city, 'type': 'like', 'units': 'metric', 'APPID': appid})
+                           params={'q': city, 'type': 'like', 'units': 'metric', 'APPID': APPID_WeatherOpenMap})
         if res.status_code == 200:
             data = res.json()
-            return data['list'][0]['name'].lower().replace(' ', '-')
+            return data['list'][0]['name'].lower().replace(' ', '-').replace('’', '')
     except Exception as e:
         print("Exception (find):", e)
         pass

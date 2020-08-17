@@ -18,9 +18,10 @@ def parse_chronicle_in_date(date):
             bs.find_all('div', {'class': 'caption'})]
 
 
-def parse_flag_city(city):
+def parse_flag_city(city, lang='ru'):
     """парсинг флага города"""
-    url = f'https://ru.wikipedia.org/wiki/{city}'
+    # lang = 'ru' if city[1] in SCENARIOS_WEATHER['ru'] else 'en'
+    url = f'https://{lang}.wikipedia.org/wiki/{city}'
     resp = requests.get(url)
     bs = BeautifulSoup(resp.text, features='html.parser')
     right_table = [lm.contents[0].attrs['src'] for lm in bs.find_all('a', class_='image')]

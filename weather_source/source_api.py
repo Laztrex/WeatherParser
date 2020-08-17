@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 from termcolor import cprint
 
 from weather_source.source_url import MailWeather, FindCityError
-from weather_source.files.settings import analyze_weather, SCENARIOS_WEATHER, LOG
+from weather_source.files.settings import analyze_weather, SCENARIOS_WEATHER, LOG, APPID_WeatherOpenMap
 
 
 class APIWeatherError(Exception):
@@ -19,12 +19,22 @@ class APIWeatherError(Exception):
         return f'\n \n {self.name_error}: {self.details} \n \n'
 
 
+class AppIdError(Exception):
+    def __init__(self, *args):
+        self.name_error = "App Id API Error (OpenWeatherMap)"
+        self.details = args
+
+    def __str__(self):
+        return f'\n \n {self.name_error}: ' \
+               f'Проверьте ваш id в "APPID_WeatherOpenMap" - /weather_source/files/settings'
+
+
 class BaseWeather(metaclass=ABCMeta):
     """
     Работа с API OpenWeatherMap
     """
     def __init__(self, source, city):
-        self.appid = SCENARIOS_WEATHER["appid_WeatherMap"]
+        self.appid = APPID_WeatherOpenMap
         self.s_city = f'{city},RU'
         self.city_id = None
         self.main_worker = source
@@ -57,7 +67,7 @@ class BaseWeather(metaclass=ABCMeta):
             LOG.warning(f"Даты {missing_dates} не могут быть обработаны API")
             cprint(f'WARNING! Даты {missing_dates} недоступны для API. \n'
                    'Перезапустите программу с appid.', color='yellow')
-            cprint('Продолжена работа с mail.ru...', color='cyan')
+            cprint('будет подключён mail.ru...', color='cyan')
             [list_date.remove(i) for i in missing_dates]
 
         self._get_weathers(list_date, list_temps, list_weather)
@@ -165,8 +175,7 @@ class WeatherMap(BaseWeather):
         """выдача текущей погоды"""
         locale.setlocale(locale.LC_ALL, '')
         if self.appid is None:
-            self.appid = input('Введите appid: ') if not SCENARIOS_WEATHER["appid_WeatherMap"] \
-                else SCENARIOS_WEATHER["appid_WeatherMap"]
+            raise AppIdError
         try:
             res = requests.get("http://api.openweathermap.org/data/2.5/weather",
                                params={'id': self.city_id, 'units': 'metric', 'lang': 'ru', 'APPID': self.appid})
@@ -178,9 +187,8 @@ class WeatherMap(BaseWeather):
     def weather_from_api(self):
         """выдача погоды за 5 дней"""
         locale.setlocale(locale.LC_ALL, '')
-        if self.appid is None:
-            self.appid = input('Введите appid: ') if not SCENARIOS_WEATHER["appid_WeatherMap"] \
-                else SCENARIOS_WEATHER["appid_WeatherMap"]
+        if not self.appid:
+            raise AppIdError
         try:
             res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
                                params={'id': self.city_id, 'units': 'metric', 'lang': 'ru', 'APPID': self.appid})
@@ -194,6 +202,10 @@ class WeatherMap(BaseWeather):
                 raise TypeError(res.text)
         except Exception as e:
             raise APIWeatherError(e)
+
+    def add_appid(self, my_id):
+        SCENARIOS_WEATHER["appid_WeatherMap"] = my_id
+        return 'DONE!'
 
     def __repr__(self):
         return self

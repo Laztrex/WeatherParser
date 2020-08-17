@@ -46,5 +46,15 @@
   "екатеринбург": {
     "t_crypt": "ekaterinburg",
     "t_late": "yekaterinburg"
+  },
+  "london": {
+    "t_late": "london"
+  },
+  "johannesburg": {
+    "t_late": "johannesburg"
+  },
+  "ставрополь": {
+    "t_late": "stavropol",
+    "t_crypt": "stavropol"
   }
 }

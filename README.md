@@ -1,52 +1,63 @@
-# TaskCompilation
-Plan: a collection of different tasks for encrypting / constructing artificial languages. Later merge into one global related project
-> Globally: everything here is the forerunner for the artificial language generator Ro
-
+# WeatherParser
+share the weather, upload to the database, draw a postcard, and display information on the console
+> Globally: it is planned to supplement the project, add new resources and make English support
+>> Warining! Cities temporarily only in Cyrillic
 ---
-## Caesar Encryptor
-Цель: Необходимо написать программу, шифрующее слово с помощью [Шифра Цезаря](https://is.gd/rcGAsp).
-Программа должна принимать на вход от пользователя слово и число сдвигов. 
+## Description
+Weather parser from three sources - yandex.ru, mail.ru and API WeatherOpenMap  
+Capability:  
+- **getting the weather from yandex.ru (яндекс) and add in database** 
+~~~
+# default city: Москва
+# default resource: яндекс
+# default dates: one week future
+python3 give_weather.py push
 
-Example:  
-- Encoding
-~~~
-Слово:         гитхаб  
-Число сдвигов: 3  
-Вывод:         ёлхшгд
+# equivalently
+python3 give_weather.py push -s яндекс
 ~~~
 ~~~
-main_enc.py цезарь гитхаб 3 [-m enc -a ru]
+# with choice city
+python3 give_weather.py push -c Рязань
 ~~~
-- decoding
+> WARNING! Source "яндекс" supports only 10 days  
+- **getting the weather from mail.ru and add in database** 
 ~~~
-Слово:         ёлхшгд  
-Число сдвигов: 3  
-Вывод:         гитхаб
+python3 give_weather.py push -s мэйл
 ~~~
 ~~~
-main_enc.py цезарь ёлхшгд 3 -m dec [-a ru]
+# with choices dates and city
+python3 give_weather.py push -s мэйл -c Рязань -d 2020.08.12
 ~~~
 
-## Vijener Encryptor
-Цель: Необходимо написать программу, шифрующее слово с помощью [Шифра Виженера](https://is.gd/WEVeME).
-Программа должна принимать на вход от пользователя слово и слово-ключ.
+- **getting the weather from WeatherOpenMap and add in database** 
+~~~
+python3 give_weather.py push -s api -c Екатеринбург
+~~~
+~~~
+python3 give_weather.py push -s api -c Рязань -d 2020.08.12-2020.08.15
+~~~
+> WARNING!  
+>Add your id key WeatherOpenMap in _/weather_source/file/settings.py_ 
+>> WARNING!  
+>Source "api" supports only 5 days
 
-Example:  
-- Encoding
+- **getting the weather from all resources (stat_mode) and add in database** 
 ~~~
-Слово:         гитхаб  
-Слово-ключ:    привет  
-Вывод:         тщычеу
+python3 give_weather.py push -st -c Екатеринбург
 ~~~
 ~~~
-main_enc.py виженер гитхаб привет [-m enc -a ru]
+python3 give_weather.py push -st -c Рязань -d 2020.08.12-2020.08.15
 ~~~
-- decoding
+
+- **draw postcard (_use cv2_)** 
 ~~~
-Слово:         тщычеу  
-Число сдвигов: привет  
-Вывод:         гитхаб
+python3 give_weather.py card -c Рязань -d 2020.08.17
 ~~~
 ~~~
-main_enc.py виженер тщычеу привет -m dec [-a ru]
+python3 give_weather.py card -c Москва -d 2020.08.12-2020.08.15
+~~~
+> Example postcard
+~~~
+python3 give_weather.py card -c Рязань -d 2020.08.17
 ~~~

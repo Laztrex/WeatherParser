@@ -5,7 +5,7 @@ from termcolor import cprint
 import unittest
 from unittest.mock import patch, call
 
-from weather_source.files.settings import SCENARIOS_WEATHER
+from weather_source.files.settings import SCENARIOS_WEATHER, APPID_WeatherOpenMap
 from weather_source.source_api import WeatherMap
 from weather_source.weather_maker import WeatherMaker
 
@@ -13,7 +13,7 @@ from weather_source.weather_maker import WeatherMaker
 class NewDate(datetime.date):
     @classmethod
     def today(cls):
-        return cls(2020, 8, 6)
+        return datetime.date(2020, 8, 6)
 
 
 def mocked_requests_get(*args, **kwargs):
@@ -90,7 +90,7 @@ class GlobalEngineTest(unittest.TestCase):
         self.assertEqual(test_current_date.current_weather(), {'weather:': 'дождь', 'temp': 26.33})
         self.assertIn(call('http://api.openweathermap.org/data/2.5/weather',
                            params={'id': 524901, 'units': 'metric', 'lang': 'ru',
-                                   'APPID': SCENARIOS_WEATHER["appid_WeatherMap"]}), mock_get.call_args_list)
+                                   'APPID': APPID_WeatherOpenMap}), mock_get.call_args_list)
         print(test_current_date.current_weather())
 
     def test_method_for_part_days(self):

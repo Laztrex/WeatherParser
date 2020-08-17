@@ -12,7 +12,7 @@ from weather_source.user_represent import ImageMaker
 class NewDate(date):
     @classmethod
     def today(cls):
-        return date(2020, 8, 6)
+        return date(2020, 8, 17)
 
 
 class GlobalEngineTest(unittest.TestCase):
@@ -28,20 +28,20 @@ class GlobalEngineTest(unittest.TestCase):
 
     @patch('cv2.imwrite')
     @patch('weather_source.parse_info.parse_current_news',
-           return_value=['Арендатор Фортуны отказался от участия в достройке Nord Stream 2'])
+           return_value=['В Белоруссии оппозиция опубликовала состав координационного совета'])
     @patch('weather_source.parse_info.parse_chronicle_in_date',
-           return_value=[('1777', 'В Лондоне открыт первый в мире цирк', 'https://www.calend.ru/events/2763/')])
+           return_value=[('1896', 'Начало золотой лихорадки на Клондайке', 'https://www.calend.ru/events/3036/')])
     @patch('weather_source.user_represent.ImageMaker.init_new', return_value=None)
     def test_generate_card(self, mock_img, mock_news, mock_chronicle, mock_init):
         datetime.date = NewDate
 
         flag_city = open('test_flag', 'rb')
         with patch('weather_source.parse_info.parse_flag_city', return_value=flag_city):
-            for i, j in [('Утро', {'temp': '+24', 'weather': 'ясно'}),
-                         ('День', {'temp': '+28', 'weather': 'ясно'}),
-                         ('Вечер', {'temp': '+21', 'weather': 'ясно'}),
-                         ('Ночь', {'temp': '+18', 'weather': 'ясно'})]:
-                self.get_weather_test.run(date=date(2020, 8, 4), part_day=i, weather=j)
+            for i, j in [('Утро', {'temp': '+18', 'weather': 'ясно'}),
+                         ('День', {'temp': '+25', 'weather': 'ясно'}),
+                         ('Вечер', {'temp': '+19', 'weather': 'ясно'}),
+                         ('Ночь', {'temp': '+12', 'weather': 'облачно'})]:
+                self.get_weather_test.run(date=date(2020, 8, 17), part_day=i, weather=j)
         flag_city.close()
 
         duplicate = self.get_weather_test.image_cv2

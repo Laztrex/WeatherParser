@@ -61,6 +61,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+*.db
 .static_storage/
 .media/
 local_settings.py
@@ -160,7 +161,6 @@ Temporary Items
 Thumbs.db
 ehthumbs.db
 ehthumbs_vista.db
-
 # Dump file
 *.stackdump
 
@@ -215,3 +215,6 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+settings.py.id
+

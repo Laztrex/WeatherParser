@@ -65,3 +65,7 @@ if __name__ == '__main__':
     else:
         print("Что-то пошло не так...")
 
+    # test_weather = WeatherMaker(push_base=True, city='Ставрополь',
+    #                             date=['2020.08.17'], stat=True)
+    # test_weather.base_run()
+

@@ -115,7 +115,8 @@ class ImageMaker:
                 cv2.putText(self.image_cv2, '...', (coord[0], coord[1][mode] + 14 * idx),
                             font, scale, clr, thickness, line)
                 break
-            word_cleared = re.sub(r'[«‎»—–]', '', word)
+            word_cleared = re.sub(r'[«‎»]', '"', word)
+            word_cleared = re.sub(r'[—–]', '-', word_cleared)
             word_cleared = re.sub(r'ё', 'е', word_cleared)
             cv2.putText(self.image_cv2, str(word_cleared), (coord[0], coord[1][mode] + 14 * idx),
                         font, scale, clr, thickness, line)
@@ -159,7 +160,7 @@ class ImageMaker:
         h, w = SCENARIOS_WEATHER["ICON_WEATHER"][part_day]
         self.image_cv2[h[0]:h[1], w[0]:w[1]] = img2
         img = np.array([250, 230, 230])
-        self.image_cv2[h[0]:h[1] + 3, 292:502] = img
+        self.image_cv2[h[0]:h[1] + 3, 292:505] = img
 
     def merge_img_with_icons(self, img1, icon, mode, part_day):
         """
