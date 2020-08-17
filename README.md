@@ -61,3 +61,4 @@ python3 give_weather.py card -c Москва -d 2020.08.12-2020.08.15
 ~~~
 python3 give_weather.py card -c Рязань -d 2020.08.17
 ~~~
+![Image alt](https://github.com/Laztrex/WeatherParser/raw/master/tests/test_img.jpg)
