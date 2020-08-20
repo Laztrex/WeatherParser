@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 APPID_WeatherOpenMap = ''
 
@@ -82,8 +83,8 @@ SCENARIOS_WEATHER = {
         },
     "degree_icon": 'degree.jpg',
 
-    "PATH_TEMP": '/probe.jpg',
-    "PATH_ICON": '/icons/{mode}/{icon}',
+    "PATH_TEMP": os.path.normpath(os.path.dirname(__file__) + '/probe.jpg'),
+    "PATH_ICON": os.path.normpath(os.path.dirname(__file__) + '/icons/{mode}/{icon}'),
     "TEXT_XY": {"Хроника": ((330, 360), (150, 150), (440, 470), (150, 150)),
                 "В мире": ((330, 360), (60, 60), (440, 470), (60, 60))},  # x1, y1, x2, y2
     "TEXT_TEMP": ((60, 40), 16, 0.8, (0, 0, 0), 2, 16),
