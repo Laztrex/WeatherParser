@@ -11,7 +11,7 @@ from random import choice
 from weather_source.translit_city import t_crypt
 import weather_source.parse_info
 from weather_source.files.settings import SCENARIOS_WEATHER
-from weather_source.functions_subworkers import return_weather_colored_and_logo
+from weather_source._functions_subworkers import return_weather_colored_and_logo
 
 
 

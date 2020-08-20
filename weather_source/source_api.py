@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 from termcolor import cprint
 
 from weather_source.source_url import MailWeather, FindCityError
-from weather_source.functions_subworkers import analyze_weather, LOG
+from weather_source._functions_subworkers import analyze_weather, LOG
 from weather_source.files.settings import APPID_WeatherOpenMap, SCENARIOS_WEATHER
 
 

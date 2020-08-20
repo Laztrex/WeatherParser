@@ -8,7 +8,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
-from weather_source.functions_subworkers import city_read, city_write, LOG
+from weather_source._functions_subworkers import city_read, city_write, LOG
 from weather_source.files.settings import SCENARIOS_WEATHER
 from weather_source.translit_city import t_crypt, t_late
 

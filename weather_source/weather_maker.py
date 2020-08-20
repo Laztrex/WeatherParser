@@ -9,7 +9,7 @@ from collections import namedtuple
 from weather_source.main_worker import Worker
 from weather_source.files.settings import SCENARIOS_WEATHER
 from weather_source.stat_decorator import parse_func
-from weather_source.functions_subworkers import LOG
+from weather_source._functions_subworkers import LOG
 
 
 class DateError(Exception):

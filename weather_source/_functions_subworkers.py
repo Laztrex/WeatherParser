@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 from weather_source.files.settings import SCENARIOS_WEATHER
 
@@ -81,7 +82,7 @@ def return_weather_colored_and_logo(weather):
 
 def city_read(mode):
     """проверка, сущ. ли в файле название/id города для определенного источника погоды"""
-    with open('files/city.json', "r", encoding='utf-8') as read_file:
+    with open(os.path.normpath(os.path.dirname(__file__) + '/files/city.json'), "r", encoding='utf-8') as read_file:
         loaded_json_file = json.load(read_file)
         try:
             return loaded_json_file[SCENARIOS_WEATHER['city']][mode]
@@ -91,12 +92,12 @@ def city_read(mode):
 
 def city_write(mode, city):
     """если в файле название/id города для определенного источника погоды отсутствует - запись"""
-    with open('files/city.json', "r", encoding='utf-8') as write_file:
+    with open(os.path.normpath(os.path.dirname(__file__) + '/files/city.json'), "r", encoding='utf-8') as write_file:
         b = json.load(write_file)
         if SCENARIOS_WEATHER['city'] not in b:
             b.update({SCENARIOS_WEATHER['city']: {}})
         b[SCENARIOS_WEATHER['city']].update({mode: city})
-    with open('files/city.json', "w", encoding='utf-8') as write_file:
+    with open(os.path.normpath(os.path.dirname(__file__) + 'city.json'), "w", encoding='utf-8') as write_file:
         json.dump(b, write_file, indent=2, ensure_ascii=False)
 
 
