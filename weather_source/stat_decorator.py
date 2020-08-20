@@ -4,7 +4,7 @@ import re
 from collections import defaultdict, namedtuple
 
 from weather_source.source_api import BaseWeather
-from weather_source.files.settings import analyze_weather
+from weather_source.functions_subworkers import analyze_weather
 
 
 def parse_func(func):

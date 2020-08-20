@@ -216,5 +216,5 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-settings.py.id
+settings.py
 

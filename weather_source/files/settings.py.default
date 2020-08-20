@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-APPID_WeatherOpenMap = '2e86a4b6e54c2f514e411e63e023968c'
+APPID_WeatherOpenMap = ''
 
 
 SCENARIOS_WEATHER = {

@@ -9,7 +9,8 @@ from weather_source.files.models import DatabaseUpdater
 from weather_source.user_represent import ImageMaker
 from weather_source.source_url import YandexWeather, MailWeather
 from weather_source.source_api import WeatherMap
-from weather_source.files.settings import LOG, configure_logging, SCENARIOS_WEATHER
+from weather_source.files.settings import SCENARIOS_WEATHER
+from weather_source.functions_subworkers import LOG, configure_logging
 
 
 class Worker(metaclass=ABCMeta):

@@ -1,6 +1,6 @@
 import peewee
 from playhouse.db_url import connect
-from weather_source.files.settings import LOG
+from weather_source.functions_subworkers import LOG
 
 database_proxy = peewee.DatabaseProxy()
 

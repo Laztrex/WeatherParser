@@ -8,7 +8,8 @@ import requests
 
 from bs4 import BeautifulSoup
 
-import weather_source.files.settings as settings
+from weather_source.functions_subworkers import city_read, city_write, LOG
+from weather_source.files.settings import SCENARIOS_WEATHER
 from weather_source.translit_city import t_crypt, t_late
 
 
@@ -26,20 +27,20 @@ def check_city(mode):
     :param mode: t_crypt для mail.ru, t_late - для яндекса
     :return: написание города для определенного источника
     """
-    answer_city = settings.city_read(mode.__name__)
+    answer_city = city_read(mode.__name__)
     if not answer_city:
-        city_correct = mode(settings.SCENARIOS_WEATHER['city'])
+        city_correct = mode(SCENARIOS_WEATHER['city'])
         res = requests.get('https://yandex.ru/pogoda/' + city_correct + '/') if mode.__name__ == 't_late' \
             else requests.get('https://pogoda.mail.ru/prognoz/' + city_correct + '/')
         if res.status_code == 200:
-            settings.city_write(mode.__name__, city_correct)
+            city_write(mode.__name__, city_correct)
             return city_correct
         else:
             if mode.__name__ == 't_late':
                 city_correct = YandexWeather.find_correct_city_name()
             else:
                 city_correct = MailWeather.find_correct_city_name()
-            settings.city_write(mode.__name__, city_correct)
+            city_write(mode.__name__, city_correct)
             return city_correct
     return answer_city
 
@@ -59,7 +60,7 @@ class YandexWeather:
     def find_correct_city_name():
         """поиск города, если модуль "translit_test" не справился"""
         try:
-            res = requests.get('https://yandex.ru/pogoda/search?request=' + settings.SCENARIOS_WEATHER['city'])
+            res = requests.get('https://yandex.ru/pogoda/search?request=' + SCENARIOS_WEATHER['city'])
             if res.status_code == 200:
                 bs4 = BeautifulSoup(res.text, features='html.parser')
                 a = bs4.find_all('li', {'class': 'place-list__item'})
@@ -93,7 +94,7 @@ class YandexWeather:
 
     def temp_weather(self, bs):
         """аккумуляция температур"""
-        settings.LOG.info(f"Смотрим погоду через Yandex в - {settings.SCENARIOS_WEATHER['city']}")
+        LOG.info(f"Смотрим погоду через Yandex в - {SCENARIOS_WEATHER['city']}")
         return [self._analyze_temps(el.text) for el in bs.find_all('div', {'class': 'weather-table__temp'})]
 
     def weather(self, bs):
@@ -124,7 +125,7 @@ class MailWeather:
     def find_correct_city_name():
         """поиск города, если модуль "translit_test" не справился"""
         try:
-            res = requests.get('https://pogoda.mail.ru/search/?name=' + settings.SCENARIOS_WEATHER['city'])
+            res = requests.get('https://pogoda.mail.ru/search/?name=' + SCENARIOS_WEATHER['city'])
             if res.status_code == 200:
                 city = res.url.split('/')[-2]
                 if city != 'search':
@@ -152,7 +153,7 @@ class MailWeather:
 
     def temp_weather(self, bs):
         """аккумуляция температур"""
-        settings.LOG.info(f"Смотрим погоду через Mail.ru в - {settings.SCENARIOS_WEATHER['city']}")
+        LOG.info(f"Смотрим погоду через Mail.ru в - {SCENARIOS_WEATHER['city']}")
         temp_list = [el.text for el in
                      bs.find_all('div', {'class': 'day__temperature'})[0:4]
                      ]
