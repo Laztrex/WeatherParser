@@ -141,10 +141,8 @@ class MailWeather:
             raise FindCityError(e)
 
     def _get_name_month(self, month):
-        # print(locale.getlocale())
-        # lang = 'en_US.UTF-8' if os.name != 'posix' else 'en_US.UTF-8'
-        # print(lang)
-        # locale.setlocale(locale.LC_ALL, lang)
+        lang = 'en-US' if os.name != 'posix' else 'en_US.UTF-8'
+        locale.setlocale(locale.LC_ALL, lang)
         if month.year == 2020:
             add_year = ''
         else:

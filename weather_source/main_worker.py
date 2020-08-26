@@ -44,7 +44,6 @@ class Worker(metaclass=ABCMeta):
 
     def pull_db(self, base):
         LOG.info(f"PULL weather from DB for {self.date_range}")
-
         for city, date, part_day, weather in base.base_puller(self.date_range, self.city):
             self.data_weather[date.date()][part_day] = {'weather': weather['weather'], 'temp': weather['temp']}
 
@@ -71,7 +70,6 @@ class Worker(metaclass=ABCMeta):
         for date_weather, part_day, weather in \
                 self._fork_data(sorted(self.data_weather.items(), key=lambda x: x[0])):
             if self.markers[1]:
-                print(date_weather, part_day, weather)
                 self.push_db(base, date_weather, part_day, weather)
             if self.markers[2]:
                 self.card(img, date_weather, part_day, weather)
