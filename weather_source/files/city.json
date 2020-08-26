@@ -3,58 +3,8 @@
     "t_late": "11",
     "t_crypt": "ryazan"
   },
-  "москва": {
-    "t_late": "moscow",
-    "t_crypt": "moskva"
-  },
-  "воронеж": {
-    "t_late": "voronezh",
-    "t_crypt": "voronezh"
-  },
-  "краснодар": {
-    "t_late": "krasnodar",
-    "t_crypt": "krasnodar"
-  },
-  "шилово": {
-    "t_late": "shilovo",
-    "t_crypt": "shilovo"
-  },
-  "скопин": {
-    "t_late": "skopin",
-    "t_crypt": "skopin"
-  },
-  "сасово": {
-    "t_late": "sasovo",
-    "t_crypt": "sasovo"
-  },
-  "касимов": {
-    "t_late": "kasimov",
-    "t_crypt": "kasimov"
-  },
-  "волгоград": {
-    "t_late": "volgograd",
-    "t_crypt": "volgograd"
-  },
-  "тула": {
-    "t_crypt": "tula",
-    "t_late": "tula"
-  },
-  "курск": {
-    "t_late": "kursk",
-    "t_crypt": "kursk"
-  },
   "екатеринбург": {
-    "t_crypt": "ekaterinburg",
-    "t_late": "yekaterinburg"
-  },
-  "london": {
-    "t_late": "london"
-  },
-  "johannesburg": {
-    "t_late": "johannesburg"
-  },
-  "ставрополь": {
-    "t_late": "stavropol",
-    "t_crypt": "stavropol"
+    "t_late": "yekaterinburg",
+    "t_crypt": "ekaterinburg"
   }
 }

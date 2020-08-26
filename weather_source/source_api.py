@@ -27,7 +27,7 @@ class AppIdError(Exception):
 
     def __str__(self):
         return f'\n \n {self.name_error}: ' \
-               f'Проверьте ваш id в "APPID_WeatherOpenMap" - /weather_source/files/settings'
+               f'Проверьте ваш id в "APPID_WeatherOpenMap" - /weather_source/files/settings.py'
 
 
 class BaseWeather(metaclass=ABCMeta):

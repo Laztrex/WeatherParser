@@ -71,6 +71,7 @@ class Worker(metaclass=ABCMeta):
         for date_weather, part_day, weather in \
                 self._fork_data(sorted(self.data_weather.items(), key=lambda x: x[0])):
             if self.markers[1]:
+                print(date_weather, part_day, weather)
                 self.push_db(base, date_weather, part_day, weather)
             if self.markers[2]:
                 self.card(img, date_weather, part_day, weather)

@@ -30,8 +30,9 @@ def check_city(mode):
     answer_city = city_read(mode.__name__)
     if not answer_city:
         city_correct = mode(SCENARIOS_WEATHER['city'])
-        res = requests.get('https://yandex.ru/pogoda/' + city_correct + '/') if mode.__name__ == 't_late' \
-            else requests.get('https://pogoda.mail.ru/prognoz/' + city_correct + '/')
+        res = requests.get(SCENARIOS_WEATHER["source_url"]["яндекс"]["weather"][:25] + city_correct + '/') \
+            if mode.__name__ == 't_late' \
+            else requests.get(SCENARIOS_WEATHER["source_url"]["мэйл"]["weather"][:31] + city_correct + '/')
         if res.status_code == 200:
             city_write(mode.__name__, city_correct)
             return city_correct
@@ -54,13 +55,13 @@ class YandexWeather:
         self.site = self._gen_url()
 
     def _gen_url(self):
-        return 'https://yandex.ru/pogoda/' + check_city(t_late) + '/details?via=ms/'
+        return SCENARIOS_WEATHER["source_url"]["яндекс"]["weather"].format(city=check_city(t_late))
 
     @staticmethod
     def find_correct_city_name():
         """поиск города, если модуль "translit_test" не справился"""
         try:
-            res = requests.get('https://yandex.ru/pogoda/search?request=' + SCENARIOS_WEATHER['city'])
+            res = requests.get(SCENARIOS_WEATHER["source_url"]["яндекс"]["search"] + SCENARIOS_WEATHER['city'])
             if res.status_code == 200:
                 bs4 = BeautifulSoup(res.text, features='html.parser')
                 a = bs4.find_all('li', {'class': 'place-list__item'})
@@ -118,14 +119,14 @@ class MailWeather:
         self.site = self._gen_url(dates)
 
     def _gen_url(self, dates):
-        return 'https://pogoda.mail.ru/prognoz/' + check_city(t_crypt) + '/' + self._get_name_month(dates)
-        # TODO: перенести сайты в settings
+        return SCENARIOS_WEATHER["source_url"]["мэйл"]["weather"]\
+            .format(city=check_city(t_crypt), name_month=self._get_name_month(dates))
 
     @staticmethod
     def find_correct_city_name():
         """поиск города, если модуль "translit_test" не справился"""
         try:
-            res = requests.get('https://pogoda.mail.ru/search/?name=' + SCENARIOS_WEATHER['city'])
+            res = requests.get(SCENARIOS_WEATHER["source_url"]["мэйл"]["search"] + SCENARIOS_WEATHER['city'])
             if res.status_code == 200:
                 city = res.url.split('/')[-2]
                 if city != 'search':
@@ -140,8 +141,10 @@ class MailWeather:
             raise FindCityError(e)
 
     def _get_name_month(self, month):
-        lang = 'en_US' if os.name != 'posix' else 'en_US.UTF-8'
-        locale.setlocale(locale.LC_ALL, lang)
+        # print(locale.getlocale())
+        # lang = 'en_US.UTF-8' if os.name != 'posix' else 'en_US.UTF-8'
+        # print(lang)
+        # locale.setlocale(locale.LC_ALL, lang)
         if month.year == 2020:
             add_year = ''
         else:
