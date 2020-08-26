@@ -57,7 +57,7 @@ class DatabaseUpdater:
                                        Temp.weather == weather['weather'],
                                        Temp.temp == weather['temp']):
                 updated = Temp.update({Temp.weather: weather['weather'], Temp.temp: weather['temp']}). \
-                    where(Temp.date == date_weather, Temp.part_day == part_day)
+                    where(Temp.date == date_weather, Temp.part_day == part_day, Temp.city == city)
                 LOG.info(f'Обновлено: {updated.execute()} - {Temp.date} - {Temp.part_day}')
             else:
                 pass
