@@ -8,6 +8,14 @@ SCENARIOS_WEATHER = {
     "city": "воронеж",
     "dates": None,
     "stat_mode": False,
+
+    "source_url": {"яндекс": {"weather": "https://yandex.ru/pogoda/{city}/details?via=ms/",
+                              "search": "https://yandex.ru/pogoda/search?request="
+                              },
+                   "мэйл": {"weather": "https://pogoda.mail.ru/prognoz/{city}/{name_month}",
+                            "search": "https://pogoda.mail.ru/search/?name="}
+                   },
+
     "params": {
         "part_day": {
             'ru': ['Утро', 'День', 'Вечер', 'Ночь'],
