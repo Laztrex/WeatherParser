@@ -34,7 +34,7 @@ def mocked_requests_get(*args, **kwargs):
         return MockResponse(dicts, 200)
     elif args[0] == 'http://api.openweathermap.org/data/2.5/find':
         return MockResponse({'list': [{'id': 524901, 'name': 'Moscow', 'coord': {'lat': 55.7522, 'lon': 37.6156}}]}, 200)
-    elif args[0].site == 'https://pogoda.mail.ru/prognoz/moskva/6-august/#2020':
+    elif args[0] == 'https://pogoda.mail.ru/prognoz/moskva/6-august/#2020':
         return MockResponse(json_data=None, status_code=200, text='тестируем')
 
     return MockResponse(None, 404)

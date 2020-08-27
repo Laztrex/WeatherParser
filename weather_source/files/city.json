@@ -6,5 +6,12 @@
   "екатеринбург": {
     "t_late": "yekaterinburg",
     "t_crypt": "ekaterinburg"
+  },
+  "воронеж": {
+    "t_crypt": "voronezh"
+  },
+  "москва": {
+    "t_late": "moscow",
+    "t_crypt": "moskva"
   }
 }
