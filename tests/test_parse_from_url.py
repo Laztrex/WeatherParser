@@ -1,9 +1,9 @@
 import datetime
-import locale
 import logging
 import unittest
 from unittest.mock import patch
 from termcolor import cprint
+
 from weather_source.weather_maker import WeatherMaker
 
 

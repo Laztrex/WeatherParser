@@ -1,11 +1,12 @@
 import datetime
 import locale
+import logging
 
 from termcolor import cprint
 import unittest
 from unittest.mock import patch, call
 
-from weather_source.files.settings import SCENARIOS_WEATHER, APPID_WeatherOpenMap
+from weather_source.files.settings import APPID_WeatherOpenMap
 from weather_source.source_api import WeatherMap
 from weather_source.weather_maker import WeatherMaker
 
@@ -52,6 +53,7 @@ class GlobalEngineTest(unittest.TestCase):
                                 (datetime.datetime(2020, 7, 30, 3, 0), '+16', 'ясно')]
 
     def setUp(self):
+        logging.disable()
         cprint(f'Вызван {self.shortDescription()}', flush=True, color='cyan')
         self.today = datetime.datetime.now()
 
@@ -62,7 +64,8 @@ class GlobalEngineTest(unittest.TestCase):
     @patch('weather_source.weather_maker.BeautifulSoup', return_value=None)
     @patch('weather_source.source_url.MailWeather.weather', return_value=['дождь', 'дождь', 'дождь', 'дождь'])
     @patch('weather_source.source_url.MailWeather.temp_weather', return_value=['+19', '+19', '+19', '+19'])
-    def test_run_api(self, mock_get, mock_bs, mock_temp, mock_weather):
+    @patch('logging.FileHandler')
+    def test_run_api(self, mock_get, mock_bs, mock_temp, mock_weather, mock_log):
         """Тест получения погоды с API
         (используется метод weather_from_api)"""
         datetime.date = NewDate
