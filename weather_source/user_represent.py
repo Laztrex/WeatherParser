@@ -15,7 +15,6 @@ import weather_source.parse_info
 from weather_source.files.settings import SCENARIOS_WEATHER
 from weather_source.functions_subworkers import return_weather_colored_and_logo
 
-
 class ImageMaker:
     """
     draw card weather
