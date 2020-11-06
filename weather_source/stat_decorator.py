@@ -4,7 +4,7 @@ import re
 from collections import defaultdict, namedtuple
 
 from weather_source.source_api import BaseWeather
-from weather_source._functions_subworkers import analyze_weather
+from weather_source.functions_subworkers import analyze_weather
 
 
 def parse_func(func):
@@ -13,25 +13,34 @@ def parse_func(func):
     list_data = []
 
     @functools.wraps(func)
-    def surrogate(*args, **kwargs):
-        if args[0].stat_mode:
-            for i in args[1]:
-                if i.date not in total_weathers_stat:
-                    total_weathers_stat[i.date] = {'temp': [int(re.sub("°", '', i)) for i in i.temp],
-                                                   'weather': list(i.weather)}  # weather из setting
+    def surrogate(weather_maker_obj, total_weather_info):
+        if weather_maker_obj.stat_mode:
+            for day in total_weather_info:
+                if day.date not in total_weathers_stat:
+                    total_weathers_stat[day.date] = {
+                        'temp': [int(re.sub("°", '', temp)) for temp in day.temp],
+                        'weather': list(day.weather)
+                    }
                 else:
-                    formatting_temp = [int(re.sub("°", '', i)) for i in i.temp]
-                    total_weathers_stat[i.date]['temp'] = \
-                        [sum(i) // 2 for i in zip(formatting_temp, total_weathers_stat[i.date]['temp'])]
-                    total_weathers_stat[i.date]['weather'] = \
-                        [analyze_weather(list(i)) for i in zip(i.weather, total_weathers_stat[i.date]['weather'])]
-            if args[0].source_weather == 'api':
-                for i, j in total_weathers_stat.items():
-                    list_data.append(Record(date=i, temp=[BaseWeather.string_mod(str_temp) for str_temp in j['temp']],
-                                            weather=j['weather']))
-                return func(args[0], list_data)
+                    formatting_temp = [int(re.sub("°", '', temp)) for temp in day.temp]
+                    total_weathers_stat[day.date]['temp'] = \
+                        [
+                            sum(value_temp) // 2 for value_temp in zip(formatting_temp,
+                                                                       total_weathers_stat[day.date]['temp'])
+                        ]
+                    total_weathers_stat[day.date]['weather'] = \
+                        [
+                            analyze_weather(list(i)) for i in zip(day.weather,
+                                                                  total_weathers_stat[day.date]['weather'])
+                        ]
+            if weather_maker_obj.service_source == 'WeatherMap':
+                for day, weather in total_weathers_stat.items():
+                    list_data.append(Record(date=day,
+                                            temp=[BaseWeather.string_mod(str_temp)
+                                                  for str_temp in weather['temp']],
+                                            weather=weather['weather']))
+                return func(weather_maker_obj, list_data)
         else:
-            return func(args[0], args[1])
+            return func(weather_maker_obj, total_weather_info)
 
     return surrogate
-

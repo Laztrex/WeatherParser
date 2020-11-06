@@ -1,9 +1,9 @@
 import datetime
-import locale
 import logging
 import unittest
 from unittest.mock import patch
 from termcolor import cprint
+
 from weather_source.weather_maker import WeatherMaker
 
 
@@ -56,10 +56,10 @@ class GlobalEngineTest(unittest.TestCase):
     @patch('logging.FileHandler')
     def test_run_yandex(self, mock_yadates, mock_yaweather, mock_yatemp, mock_get, mock_bs, mocked_log):
         """Тест получения погоды с Яндекс.Погоды"""
-        test_ya = WeatherMaker(source='яндекс', city='Москва', date=['2020.08.06'],
-                               push_base=True)
+        test_ya = WeatherMaker(source=1, city='Москва', dates=['2020.08.06'],
+                               command='push')
         test_ya.base_run(name_db='TEST')
-        print(f'{test_ya.data_weather}')
+        self.assertEqual(len(test_ya.data_weather), 1)
 
     @patch('weather_source.source_url.MailWeather.weather', return_value=['дождь', 'ясно', 'пасмурно', 'гроза'])
     @patch('weather_source.source_url.MailWeather.temp_weather', return_value=['+19', '+27', '+21', '+15'])
@@ -69,9 +69,9 @@ class GlobalEngineTest(unittest.TestCase):
     @patch('locale.setlocale', return_value=None)
     def test_run_mail(self, mock_mailweather, mock_mailtemp, mock_get, mock_bs, mocked_log, mock_locale):
         """Тест получения погоды с mail.ru"""
-        test_mail = WeatherMaker(source='мэйл', city='Москва', date=['2020.08.06'], push_base=True)
+        test_mail = WeatherMaker(source=2, city='Москва', dates=['2020.08.06'], command='push')
         test_mail.base_run(name_db='TEST')
-        print(f'{test_mail.data_weather}')
+        self.assertEqual(len(test_mail.data_weather), 1)
 
 
 if __name__ == '__main__':

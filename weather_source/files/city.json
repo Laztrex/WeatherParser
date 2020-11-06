@@ -13,5 +13,9 @@
   "москва": {
     "t_late": "moscow",
     "t_crypt": "moskva"
+  },
+  "касимов": {
+    "t_late": "kasimov",
+    "t_crypt": "kasimov"
   }
 }

@@ -7,8 +7,8 @@ from abc import ABCMeta, abstractmethod
 from termcolor import cprint
 
 from weather_source.source_url import MailWeather, FindCityError
-from weather_source._functions_subworkers import analyze_weather, LOG
-from weather_source.files.settings import APPID_WeatherOpenMap, SCENARIOS_WEATHER
+from weather_source.functions_subworkers import analyze_weather, LOG
+from weather_source.files.settings import APPID_WeatherOpenMap
 
 
 class APIWeatherError(Exception):
@@ -27,7 +27,8 @@ class AppIdError(Exception):
 
     def __str__(self):
         return f'\n \n {self.name_error}: ' \
-               f'Проверьте ваш id в "APPID_WeatherOpenMap" - /weather_source/files/settings.py'
+               f'Проверьте ваш id в "APPID_WeatherOpenMap" - /weather_source/files/settings.py' \
+               f'\n Или перезапустите с другим источником .. -s 1 OR -s 2 .. '
 
 
 class BaseWeather(metaclass=ABCMeta):
@@ -67,8 +68,8 @@ class BaseWeather(metaclass=ABCMeta):
         if missing_dates:
             LOG.warning(f"Даты {missing_dates} не могут быть обработаны API")
             cprint(f'WARNING! Даты {missing_dates} недоступны для API. \n'
-                   'Перезапустите программу с appid.', color='yellow')
-            cprint('будет подключён mail.ru...', color='cyan')
+                   'Перейдите на https://openweathermap.org/api', color='yellow')
+            cprint('далее будет подключён mail.ru...', color='cyan')
             [list_date.remove(i) for i in missing_dates]
 
         self._get_weathers(list_date, list_temps, list_weather)
@@ -126,7 +127,7 @@ class BaseWeather(metaclass=ABCMeta):
         if sum(analyze_parts[1]) == 0:
             LOG.info(f'Погоду недостающей части суток берём с mail.ru...')
             mail_extend = MailWeather(dates=analyze_date)
-            bs = self.main_worker.analyze(mail_extend)
+            bs = self.main_worker.response_from_source(mail_extend)
             mail_source = mail_extend.weather(bs)[analyze_parts[0]]
             weather_in_day.insert(analyze_parts[0], mail_source)
             mail_source = mail_extend.temp_weather(bs)[
@@ -195,18 +196,14 @@ class WeatherMap(BaseWeather):
                                params={'id': self.city_id, 'units': 'metric', 'lang': 'ru', 'APPID': self.appid})
             data = res.json()
             if res.status_code == 200:
-                for i in data['list']:
-                    yield datetime.datetime.strptime(i['dt_txt'], '%Y-%m-%d %H:%M:%S'), '{0:+3.0f}'.format(
-                        i['main']['temp']), i['weather'][0]['description']
+                for response_info in data['list']:
+                    yield datetime.datetime.strptime(response_info['dt_txt'], '%Y-%m-%d %H:%M:%S'), '{0:+3.0f}'.format(
+                        response_info['main']['temp']), response_info['weather'][0]['description']
                     locale.setlocale(locale.LC_ALL, '')
             else:
                 raise TypeError(res.text)
         except Exception as e:
             raise APIWeatherError(e)
-
-    def add_appid(self, my_id):
-        SCENARIOS_WEATHER["appid_WeatherMap"] = my_id
-        return 'DONE!'
 
     def __repr__(self):
         return self

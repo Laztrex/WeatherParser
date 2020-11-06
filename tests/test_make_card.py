@@ -1,3 +1,5 @@
+import logging
+
 import cv2
 import datetime
 import io
@@ -27,12 +29,13 @@ class GlobalEngineTest(unittest.TestCase):
         cprint(f'Оттестировано. \n', flush=True, color='grey')
 
     @patch('cv2.imwrite')
+    @patch('os.makedirs')
     @patch('weather_source.parse_info.parse_current_news',
            return_value=['В Белоруссии оппозиция опубликовала состав координационного совета'])
     @patch('weather_source.parse_info.parse_chronicle_in_date',
            return_value=[('1896', 'Начало золотой лихорадки на Клондайке', 'https://www.calend.ru/events/3036/')])
     @patch('weather_source.user_represent.ImageMaker.init_new', return_value=None)
-    def test_generate_card(self, mock_img, mock_news, mock_chronicle, mock_init):
+    def test_generate_card(self, mock_img, mock_dir, mock_news, mock_chronicle, mock_init):
         datetime.date = NewDate
 
         flag_city = open('test_flag', 'rb')

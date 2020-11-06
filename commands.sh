@@ -4,8 +4,8 @@
 python give_weather.py push
 
 # запуск с уточнёнными параметрами
-python give_weather.py push -s api -c Екатеринбург -d 2020.08.12-2020.08.14
-python give_weather.py push -s мэйл -c Рязань -d 2020.08.12
+python give_weather.py push -s 3 -c Екатеринбург -d 2020.08.12-2020.08.14
+python give_weather.py push -s 2 -c Рязань -d 2020.08.12
 
 # запуск с уточнёнными параметрами и "статистическим" режимом
 python give_weather.py push -c Екатеринбург -d 2020.08.12-2020.08.14 -st

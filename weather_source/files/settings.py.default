@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 
+
 APPID_WeatherOpenMap = ''
 
+SOURCE_WEATHER = {
+    1: 'YandexWeather',
+    2: 'MailWeather',
+    3: 'WeatherMap',
+}
 
 SCENARIOS_WEATHER = {
     "city": "воронеж",
@@ -22,8 +28,10 @@ SCENARIOS_WEATHER = {
             'en': ['Morning', 'Day', 'Evening', 'Night']
         }
     },
-    'ru': 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
-    'en': 'abcdefghijklmnopqrstuvwxyz',
+    "ru": 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
+    "en": 'abcdefghijklmnopqrstuvwxyz',
+
+    "media_root": 'media/{city}/{year}_{month}',
 
     "dangerous_weather": {
         "солнечно": 0.01,

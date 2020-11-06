@@ -8,6 +8,16 @@ from weather_source.files.settings import SCENARIOS_WEATHER
 LOG = logging.getLogger('weather')
 
 
+def configure_logging():
+    LOG.setLevel(logging.INFO)
+    file_log = logging.FileHandler('weather.log', encoding='utf-8')
+    file_log.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+    LOG.addHandler(file_log)
+
+
+configure_logging()
+
+
 class WeatherDungerous:
     """для сортировки по вредности погоды"""
 
@@ -19,7 +29,7 @@ class WeatherDungerous:
         return self.name
 
     @staticmethod
-    def byDangerous_key(wea):
+    def by_dangerous_key(wea):
         return wea.dangerous
 
 
@@ -33,7 +43,7 @@ def analyze_weather(list_weathers):
         weather = WeatherDungerous(weather, SCENARIOS_WEATHER['dangerous_weather'].get(weather, 0.05))
         weather_indexes.append(weather)
 
-    sorted_result = sorted(weather_indexes, key=WeatherDungerous.byDangerous_key, reverse=True)
+    sorted_result = sorted(weather_indexes, key=WeatherDungerous.by_dangerous_key, reverse=True)
     return str(sorted_result[0]).capitalize()
 
 
@@ -99,10 +109,3 @@ def city_write(mode, city):
         b[SCENARIOS_WEATHER['city']].update({mode: city})
     with open(os.path.normpath(os.path.dirname(__file__) + '/files/city.json'), "w", encoding='utf-8') as write_file:
         json.dump(b, write_file, indent=2, ensure_ascii=False)
-
-
-def configure_logging():
-    LOG.setLevel(logging.INFO)
-    file_log = logging.FileHandler('weather.log', encoding='utf-8')
-    file_log.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
-    LOG.addHandler(file_log)

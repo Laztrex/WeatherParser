@@ -1,4 +1,6 @@
 import calendar
+import os
+
 import cv2
 import datetime
 import locale
@@ -11,8 +13,7 @@ from random import choice
 from weather_source.translit_city import t_crypt
 import weather_source.parse_info
 from weather_source.files.settings import SCENARIOS_WEATHER
-from weather_source._functions_subworkers import return_weather_colored_and_logo
-
+from weather_source.functions_subworkers import return_weather_colored_and_logo
 
 
 class ImageMaker:
@@ -233,11 +234,17 @@ class ImageMaker:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    def get_io_img(self, name_io_img='test.png'):
+        res, im_png = cv2.imencode('.png', self.image_cv2)
+        with open(name_io_img, 'wb') as f:
+            f.write(im_png.tobytes())
+        success, buffer = cv2.imencode(".jpg", self.image_cv2, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+        buffer.tofile('ExtensionlessFile')
+
     def print_card(self, date):
         """Печать открытки"""
-        # res, im_png = cv2.imencode('.png', self.image_cv2)
-        # with open('test.png', 'wb') as f:
-        #     f.write(im_png.tobytes())
-        # success, buffer = cv2.imencode(".jpg", self.image_cv2, [int(cv2.IMWRITE_JPEG_QUALITY),90])
-        # buffer.tofile('ExtensionlessFile')
-        cv2.imwrite(f'{date}-{t_crypt(self.city.lower())}.jpg', self.image_cv2)
+        path = os.path.join(SCENARIOS_WEATHER["media_root"].format(city=t_crypt(self.city.lower()),
+                                                                   year=date.year,
+                                                                   month=date.month))
+        os.makedirs(path, exist_ok=True)
+        cv2.imwrite(os.path.join(path, f'{date.day}.jpg'), self.image_cv2)

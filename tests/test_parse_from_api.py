@@ -1,11 +1,12 @@
 import datetime
 import locale
+import logging
 
 from termcolor import cprint
 import unittest
 from unittest.mock import patch, call
 
-from weather_source.files.settings import SCENARIOS_WEATHER, APPID_WeatherOpenMap
+from weather_source.files.settings import APPID_WeatherOpenMap
 from weather_source.source_api import WeatherMap
 from weather_source.weather_maker import WeatherMaker
 
@@ -52,6 +53,7 @@ class GlobalEngineTest(unittest.TestCase):
                                 (datetime.datetime(2020, 7, 30, 3, 0), '+16', 'ясно')]
 
     def setUp(self):
+        logging.disable()
         cprint(f'Вызван {self.shortDescription()}', flush=True, color='cyan')
         self.today = datetime.datetime.now()
 
@@ -62,13 +64,14 @@ class GlobalEngineTest(unittest.TestCase):
     @patch('weather_source.weather_maker.BeautifulSoup', return_value=None)
     @patch('weather_source.source_url.MailWeather.weather', return_value=['дождь', 'дождь', 'дождь', 'дождь'])
     @patch('weather_source.source_url.MailWeather.temp_weather', return_value=['+19', '+19', '+19', '+19'])
-    def test_run_api(self, mock_get, mock_bs, mock_temp, mock_weather):
+    @patch('logging.FileHandler')
+    def test_run_api(self, mock_get, mock_bs, mock_temp, mock_weather, mock_log):
         """Тест получения погоды с API
         (используется метод weather_from_api)"""
         datetime.date = NewDate
         get_weather_test = \
-            WeatherMaker(source='api', city='Москва', date=['2020.08.06'],
-                         push_base=True)
+            WeatherMaker(source=3, city='Москва', dates=['2020.08.06'],
+                         command='push')
         get_weather_test.base_run(name_db='TEST')
         self.assertEqual(len(get_weather_test.data_weather), 1)
         self.assertEqual(len(get_weather_test.data_weather[datetime.date.today()]), 4)
@@ -83,24 +86,23 @@ class GlobalEngineTest(unittest.TestCase):
         (в программе не используется)"""
         locale.setlocale(locale.LC_ALL, '')
         get_weather_test = \
-            WeatherMaker(source='api', city='Москва', date=['2020.08.06'],
-                         push_base=True)
+            WeatherMaker(source=3, city='Москва', dates=['2020.08.06'],
+                         command='push')
         test_current_date = WeatherMap(get_weather_test, get_weather_test.city)
         test_current_date._check_city()
         self.assertEqual(test_current_date.current_weather(), {'weather:': 'дождь', 'temp': 26.33})
         self.assertIn(call('http://api.openweathermap.org/data/2.5/weather',
                            params={'id': 524901, 'units': 'metric', 'lang': 'ru',
                                    'APPID': APPID_WeatherOpenMap}), mock_get.call_args_list)
-        print(test_current_date.current_weather())
 
     def test_method_for_part_days(self):
         """Тест правильного распределения частей суток"""
         get_weather_test = \
-            WeatherMaker(source='api', city='Москва', date=['2020.08.06'],
-                         push_base=True)
+            WeatherMaker(source=3, city='Москва', dates=['2020.08.06'],
+                         command='push')
         test_method_for_part = WeatherMap(get_weather_test, get_weather_test.city)
-        for i in self.TEST_FOR_ANALYZE_WEATHER:
-            test_method_for_part._method_for_part_days(i)
+        for data_weather in self.TEST_FOR_ANALYZE_WEATHER:
+            test_method_for_part._method_for_part_days(data_weather)
         self.assertEqual(test_method_for_part.first_half_part, [20, 18, 20, 25])
         self.assertEqual(test_method_for_part.second_half_part, [10, 15, 17, 16])
 
@@ -108,13 +110,13 @@ class GlobalEngineTest(unittest.TestCase):
         """Тест получения погоды недостающих частей суток"""
         # (0, (0, 0)), (1, (0, 15)), (2, (14, 16)), (3, (17, 18))
         get_weather_test = \
-            WeatherMaker(source='api', city='Москва', date=['2020.08.06'],
-                         push_base=True)
-        a = ['пасмурно', 'ясно']
+            WeatherMaker(source=3, city='Москва', dates=['2020.08.06'],
+                         command='push')
+        weather_check = ['пасмурно', 'ясно']
         test_method_for_part = WeatherMap(get_weather_test, get_weather_test.city)
-        for i in [(0, (0, 0)), (1, (0, 0)), (2, (14, 16)), (3, (17, 18))]:
-            print(test_method_for_part._analyze_parts(i, self.today.date(), a))
-        print(a)
+        for part_day_imitation in [(0, (0, 0)), (1, (0, 0)), (2, (14, 16)), (3, (17, 18))]:
+            test_method_for_part._analyze_parts(part_day_imitation, self.today.date(), weather_check)
+        self.assertEqual(len(weather_check), 4)
 
 
 if __name__ == '__main__':
