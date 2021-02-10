@@ -189,7 +189,7 @@ class Worker(metaclass=ABCMeta):
                 if date_weather <= self.date_range[0]:
                     self._text_on_console(date_weather, part_day, weather)
             else:
-                if self.date_range[0] <= date_weather <= self.date_range[1]:
+                if date_weather in self.date_range:
                     self._text_on_console(date_weather, part_day, weather)
 
     def _text_on_console(self, date_weather, part_day, weather):

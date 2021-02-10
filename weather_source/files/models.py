@@ -41,7 +41,7 @@ class DatabaseUpdater:
                     yield date_bd.city, date_bd.date, date_bd.part_day, \
                           {'weather': date_bd.weather, 'temp': date_bd.temp}
             else:
-                if date_bd.date.date() == date_weather[0]:
+                if date_bd.date.date() in date_weather:
                     yield date_bd.city, date_bd.date, date_bd.part_day, {'weather': date_bd.weather,
                                                                          'temp': date_bd.temp}
 
